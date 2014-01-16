@@ -1,0 +1,75 @@
+#!/bin/bash
+# "Script Name" - Daniel Diserens <diserens@gdls.com>
+# Version 1.0
+################################################################################
+#  DESCRIPTION: This script will modify inittab to require a password before   #
+#  booting into single user mode.                                              #
+################################################################################
+#  NOTE:  Several variables are set and not used in this code.  This was done  #
+#         intentionally, as I would like to make improvements later.           #
+################################################################################
+# set -x
+
+#*******************************************************************************
+
+#Variables
+#. "/tmp/compliancecheck/lib/setup.lib"
+#set_variables
+
+#*******************************************************************************
+
+#Functions
+SEC_Restore ()
+{
+RUN_TYPE="Restore"
+SCRIPT="/root/Desktop/stig/test/020_passwd_single_user.sh"
+if [ -x "${SCRIPT}" ]; then
+        ${SCRIPT} $1
+fi
+}
+check () {
+SCRIPT="/root/Desktop/stig/test/check_system_release.sh"
+if [ -x "${SCRIPT}" ]; then
+        ${SCRIPT} $1
+fi
+
+SCRIPT="/root/Desktop/stig/test/check_permissions.sh"
+if [ -x "${SCRIPT}" ]; then
+        ${SCRIPT} $1
+fi
+
+SCRIPT="/root/Desktop/stig/test/check_GID_passwd_file.sh"
+if [ -x "${SCRIPT}" ]; then
+        ${SCRIPT} $1
+fi
+
+SCRIPT="/root/Desktop/stig/test/check_banner.sh"
+if [ -x "${SCRIPT}" ]; then
+        ${SCRIPT} $1
+fi
+
+SCRIPT="/root/Desktop/stig/test/check_simultaneous_login.sh"
+if [ -x "${SCRIPT}" ]; then
+        ${SCRIPT} $1
+fi
+
+SCRIPT="/root/Desktop/stig/test/check_system_auth.sh"
+if [ -x "${SCRIPT}" ]; then
+        ${SCRIPT} $1
+fi
+
+SCRIPT="/root/Desktop/stig/test/check_screen_saver.sh"
+if [ -x "${SCRIPT}" ]; then
+        ${SCRIPT} $1
+fi
+
+SCRIPT="/root/Desktop/stig/test/check_login_def.sh"
+if [ -x "${SCRIPT}" ]; then
+        ${SCRIPT} $1
+fi
+
+SCRIPT="/root/Desktop/stig/test/check_passwd_hash.sh"
+if [ -x "${SCRIPT}" ]; then
+        ${SCRIPT} $1
+fi
+}

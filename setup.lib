@@ -1,0 +1,67 @@
+#!/bin/bash								       #
+################################################################################
+# "setup.lib" - Daniel Diserens <diserens@gdls.com>			       #
+# Version 1.0 								       #
+################################################################################
+#  DESCRIPTION: Setup Standard Environment Variables			       #
+#  				                                               #
+################################################################################
+#  NOTE:  Several variables are set and not used in this code.  This was done  #
+#         intentionally, as I would like to make improvements later.           #
+################################################################################
+# set -x
+
+#Variables
+
+Set_Variables () {
+	export OS=`uname -s`
+	export VER=`uname -r`
+	export HOST=`uname -n`
+	export CHIP=`uname -p`
+	export TYPE=`awk -F" " '{ if ($5 == "Client") { print $5 } else { print $5} }' /etc/redhat-release`
+	export CCDIR="/media/dvd"
+	export DIR="/var/tmp/compliancecheck"
+	export RTC_DIR="${DIR}/skip"
+	export CHECK_DIR="${DIR}/log/check"
+	export FIX_DIR="${DIR}/log/fix"
+	export RESTORE_DIR="${DIR}/log/restore"
+	export PDATE=`date +%d-%b-%Y_%H%M%S`
+	export COMPLIANCE="${CHECK_DIR}/compliance.log.{PDATE}
+	export FIX="${FIX_DIR}/fix.log.{PDATE}
+	export RESTORE="${DIR}/restore/restore.log.{PDATE}
+	export EXCEPTIONS=${DIR}/exceptions.log.{PDATE}
+################################################################################
+#				EXIT_CODES				       #
+################################################################################
+# 0 = Compliant								       #
+# 1 = Needs to be fixed							       #
+# 2 = Exclude from check       						       #
+# 3 = Failed - Run restore						       #
+################################################################################
+	export EXIT_CODE=1
+################################################################################
+#				RUN_TYPES				       #
+################################################################################
+# Complete								       #
+# Check									       #
+# Fix			       						       #
+# Restore								       #
+################################################################################
+	export RUN_TYPE="Complete"
+}
+
+########################################################################################################
+# Usage: 	check_rtc check_name								       #
+# Description:	Exit if check is not in host's rtc file						       #
+# Version: 1.0											       #
+########################################################################################################
+check_rtc ()
+{
+CHECK_NAME="$0"
+if [ `grep "^${CHECK_NAME}$" "${RTC_DIR}/${HOST}.rtc"` ]; then
+	echo "${CHECK_NAME}" has been flagged as an exception" tee -a ${EXCEPTIONS}
+fi
+}
+
+#
+# End of file: setup.lib

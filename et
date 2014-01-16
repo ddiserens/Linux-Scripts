@@ -1,0 +1,38 @@
+#!/bin/bash -x
+# et - Edit Text file, while keeping
+#      track of changes with RCS
+#Functions
+check_in ()
+{
+[ -f $2 ] && echo "$3" | ci -u $2
+}
+
+#******************************************************************
+
+check_out ()
+{
+[ -f $2 ] | co -l $2
+}
+
+#******************************************************************
+
+[ -z "$1" ] && {
+	# No file specified on the command line
+	echo "Edit what file?"	
+	exit 1
+}
+case "$1" in
+	-i|--in)
+		check_in $1 $2 $3
+		;;
+	-o|--out)
+		check_out $1 $2
+		;;
+	*)
+		echo "Invaild entry"
+		exit 1
+		;;
+esac
+
+#${EDITOR-vi} $1
+# Only check in the file if it exists
